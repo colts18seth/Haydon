@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components'
 
 const FormInputs = styled.form`
@@ -10,42 +11,48 @@ const FormInputs = styled.form`
       padding: 5px;
   }
   input {
+      margin-left: 10px;
       width: 50px;
       text-align: center;
   }
 `
 
-//? ADD STATE MANAGMENT
-
 function Form() {
-    let TotalTonsOfSurge = localStorage.totalTonsOfSurge || 0;
-    let TimeUntilEmpty = localStorage.TimeUntilEmpty || "NA";
-    let TotalLoadsToJaw = localStorage.TotalLoadsToJaw || 0;
-    let TotalSecTons = localStorage.TotalSecTons || 0;
+    const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(localStorage.totalTonsOfSurge || "NA");
+    const [timeUntilEmpty, setTimeUntilEmpty] = useState(localStorage.timeUntilEmpty || "NA");
+    const [totalLoadsToJaw, setTotalLoadsToJaw] = useState(localStorage.totalLoadsToJaw || 0);
+    const [totalSecTons, setTotalSecTons] = useState(localStorage.totalSecTons || 0);
+    const [lastUpdate, setLastUpdate] = useState(`Last Updated On: ` + (localStorage.lastUpdate || "NA"));
+
+    //? handle state changes
+
     return (
         <FormInputs>
             <label htmlFor="AvgSpeed">
                 Average Sec. Speed:
                 <input id="AvgSpeed" defaultValue="500" type="number" step="10" min="0" max="1500" />
             </label>
-            <label htmlFor="TimeUntilEmpty">
+            <label htmlFor="timeUntilEmpty">
                 Time Until Empty:
-                <input readOnly id="TimeUntilEmpty" defaultValue={TimeUntilEmpty} />
+                <input readOnly id="timeUntilEmpty" defaultValue={timeUntilEmpty} />
             </label>
-            <label htmlFor="RunableTonsOfSurge">
+            <label htmlFor="totalTonsOfSurge">
                 Runable Tons of Surge:
-                <input readOnly id="RunableTonsOfSurge" defaultValue={TotalTonsOfSurge} />
+                <input readOnly id="totalTonsOfSurge" defaultValue={totalTonsOfSurge} />
             </label>
             <hr />
             <h4>End of Shift:</h4>
-            <label htmlFor="TotalLoadsToJaw">
+            <label htmlFor="totalLoadsToJaw">
                 Total Loads To The Jaw:
-                <input id="TotalLoadsToJaw" defaultValue={TotalLoadsToJaw} type="number" />
+                <input id="totalLoadsToJaw" defaultValue={totalLoadsToJaw} type="number" />
             </label>
-            <label htmlFor="TotalSecTons">
+            <label htmlFor="totalSecTons">
                 Total Sec. Tons:
-                <input id="TotalSecTons" defaultValue={TotalSecTons} type="number" />
+                <input id="totalSecTons" defaultValue={totalSecTons} type="number" />
             </label>
+            <p>
+                {lastUpdate}
+            </p>
         </FormInputs>
     );
 }
