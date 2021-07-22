@@ -17,6 +17,13 @@ const FormInputs = styled.form`
   }
 `
 
+const Button = styled.button`
+  background: #0055a5;
+  color: white;
+  border: 2px solid #0055a5;
+  border-radius: 5px;
+`
+
 function Form() {
     const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(localStorage.totalTonsOfSurge || "NA");
     const [timeUntilEmpty, setTimeUntilEmpty] = useState(localStorage.timeUntilEmpty || "NA");
@@ -50,6 +57,7 @@ function Form() {
                 Total Sec. Tons:
                 <input id="totalSecTons" defaultValue={totalSecTons} type="number" />
             </label>
+            <Button>Submit</Button>
             <p>
                 {lastUpdate}
             </p>
