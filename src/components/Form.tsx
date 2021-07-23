@@ -25,13 +25,20 @@ const Button = styled.button`
 `
 
 function Form() {
-    const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(localStorage.totalTonsOfSurge || "NA");
-    const [timeUntilEmpty, setTimeUntilEmpty] = useState(localStorage.timeUntilEmpty || "NA");
-    const [totalLoadsToJaw, setTotalLoadsToJaw] = useState(localStorage.totalLoadsToJaw || 0);
-    const [totalSecTons, setTotalSecTons] = useState(localStorage.totalSecTons || 0);
-    const [lastUpdate, setLastUpdate] = useState(`Last Updated On: ` + (localStorage.lastUpdate || "NA"));
+    const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(localStorage.getItem("totalTonsOfSurge") || "NA");
+    const [timeUntilEmpty, setTimeUntilEmpty] = useState(localStorage.getItem("timeUntilEmpty") || "NA");
+    const [totalLoadsToJaw, setTotalLoadsToJaw] = useState(localStorage.getItem("totalLoadsToJaw") || 0);
+    const [totalSecTons, setTotalSecTons] = useState(localStorage.getItem("totalSecTons") || 0);
+    const [lastUpdate, setLastUpdate] = useState(`Last Updated On: ` + (localStorage.getItem("lastUpdate") || "NA"));
 
-    //? handle state changes
+    const handleTotalTonsOfSurge = () => {
+        // localStorage.setItem("totalTonsOfSurge", `${totalTonsOfSurge}`);
+    }
+
+    const handleSubmit = (e: any) => {
+        //? handle Submit
+        e.preventDefault();
+    }
 
     return (
         <FormInputs>
@@ -57,7 +64,7 @@ function Form() {
                 Total Sec. Tons:
                 <input id="totalSecTons" defaultValue={totalSecTons} type="number" />
             </label>
-            <Button>Submit</Button>
+            <Button onClick={(e) => handleSubmit(e)}>Submit</Button>
             <p>
                 {lastUpdate}
             </p>
