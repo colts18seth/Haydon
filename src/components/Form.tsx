@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components'
+import moment from 'moment';
 
 const FormInputs = styled.form`
   background: white;
@@ -29,10 +30,14 @@ function Form() {
     const [timeUntilEmpty, setTimeUntilEmpty] = useState(localStorage.getItem("timeUntilEmpty") || "NA");
     const [totalLoadsToJaw, setTotalLoadsToJaw] = useState(localStorage.getItem("totalLoadsToJaw") || 0);
     const [totalSecTons, setTotalSecTons] = useState(localStorage.getItem("totalSecTons") || 0);
-    const [lastUpdate, setLastUpdate] = useState(`Last Updated On: ` + (localStorage.getItem("lastUpdate") || "NA"));
+    const [lastUpdate, setLastUpdate] = useState(`Last Updated On: ` + (localStorage.getItem("lastUpdate") || new Date().toLocaleString()));
 
     const handleTotalTonsOfSurge = () => {
         // localStorage.setItem("totalTonsOfSurge", `${totalTonsOfSurge}`);
+    }
+
+    const handleLastUpdate = () => {
+
     }
 
     const handleSubmit = (e: any) => {
