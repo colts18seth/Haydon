@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components'
 
 const FormInputs = styled.form`
@@ -26,17 +26,27 @@ const Button = styled.button`
 `
 
 function Form() {
-    const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(localStorage.getItem("totalTonsOfSurge") || "NA");
-    const [lastUpdate, setLastUpdate] = useState(localStorage.getItem("lastUpdate") || "NA");
-    const [timeUntilEmpty, setTimeUntilEmpty] = useState(0);
-    const [data, setData] = useState({
-        ton100: 0,
+
+    const INITIAL_DATA = {
+        ton60: 0,
         ton50: 0,
         ton40: 0,
-        totalSecTons: 0
-    });
+        totalSecTons: 0,
+        avgSpeed: 500
+    }
 
-    //? add useEffect to update timeUntilEmpty
+    const [totalTonsOfSurge, setTotalTonsOfSurge] = useState(Number(localStorage.getItem("totalTonsOfSurge") || 10000));
+    const [lastUpdate, setLastUpdate] = useState(localStorage.getItem("lastUpdate") || 0);
+    const [timeUntilEmpty, setTimeUntilEmpty] = useState(0);
+    const [data, setData] = useState(INITIAL_DATA);
+
+    useEffect(() => {
+        const findTimeUntilEmpty = () => {
+            const timeLeft = Math.round(100 * (totalTonsOfSurge / data.avgSpeed)) / 100;
+            setTimeUntilEmpty(timeLeft);
+        }
+        findTimeUntilEmpty();
+    }, [totalTonsOfSurge, data.avgSpeed])
 
     const handleChange = (e: any) => {
         const { id, value } = e.target;
@@ -49,20 +59,40 @@ function Form() {
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
+        //get total tons for each truck type
+        const total60 = data.ton60 * 60;
+        const total50 = data.ton50 * 50;
+        const total40 = data.ton40 * 40;
+
+        //update totalTonsOfSurge with total
+        const total = total60 + total50 + total40;
+        setTotalTonsOfSurge(totalTonsOfSurge + total - data.totalSecTons);
+
         //set time of last update
         const date = new Date().toLocaleString();
         setLastUpdate(date);
 
         //save data to localStorage
         localStorage.setItem("lastUpdate", `${date}`);
+        localStorage.setItem("totalTonsOfSurge", `${totalTonsOfSurge}`);
+
+        setData(INITIAL_DATA);
     }
 
     return (
         <FormInputs>
 
-            <label htmlFor="AvgSpeed">
+            <label htmlFor="avgSpeed">
                 Average Sec. Speed:
-                <input id="AvgSpeed" value="500" type="number" step="10" min="0" max="1500" />
+                <input
+                    onChange={(e) => handleChange(e)}
+                    id="avgSpeed"
+                    value={data.avgSpeed}
+                    type="number"
+                    step="10"
+                    min="0"
+                    max="1500"
+                />
             </label>
 
             <label htmlFor="timeUntilEmpty">
@@ -86,14 +116,14 @@ function Form() {
 
             <label htmlFor="totalLoadsToJaw">
                 Total Loads To The Jaw:
-                <label htmlFor="ton100">100 Ton:
-                    <input onChange={(e) => handleChange(e)} id="ton100" value={data.ton100} type="number" />
+                <label htmlFor="ton100">60 Ton:
+                    <input onChange={(e) => handleChange(e)} id="ton60" value={data.ton60} type="number" />
                 </label>
-                <label onChange={(e) => handleChange(e)} htmlFor="ton50">50 Ton:
-                    <input id="ton50" value={data.ton50} type="number" />
+                <label htmlFor="ton50">50 Ton:
+                    <input onChange={(e) => handleChange(e)} id="ton50" value={data.ton50} type="number" />
                 </label>
-                <label onChange={(e) => handleChange(e)} htmlFor="ton40">40 Ton:
-                    <input id="ton40" value={data.ton40} type="number" />
+                <label htmlFor="ton40">40 Ton:
+                    <input onChange={(e) => handleChange(e)} id="ton40" value={data.ton40} type="number" />
                 </label>
             </label>
 
